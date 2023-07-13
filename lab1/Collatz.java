@@ -1,25 +1,35 @@
-/** Class that prints the Collatz sequence starting from a given number.
- *  @author Tom
+/**
+ * Class that prints the Collatz sequence starting from a given number.
+ *
+ * @author Tom
  */
 public class Collatz {
 
-    /** Buggy implementation of nextNumber! */
-    public static int nextNumber(int n) {
-        if (n == 1) return n;
+    public static void windowPosSum(int[] a, int n) {
+        // 2 for loops, use continue, use break
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] < 0) {
+                continue;
+            }
 
-        if (n % 2 == 0) {
-            return n / 2;
+            int sum = 0;
+            for (int j = i; j <= i + n; j++) {
+                if (j >= a.length) {
+                    break;
+                }
+                sum += a[j];
+            }
+            a[i] = sum;
         }
-        return 3 * n + 1;
+
     }
 
+
     public static void main(String[] args) {
-        int n = 5;
-        System.out.print(n + " ");
-        while (n != 1) {
-            n = nextNumber(n);
-            System.out.print(n + " ");
-        }
-        System.out.println();
+        int[] a = {1, 2, -3, 4, 5, 4};
+        int n = 3;
+        windowPosSum(a, n);
+        // should print 4, 8, -3, 4, 5, 4
+        System.out.println(java.util.Arrays.toString(a));
     }
 }
