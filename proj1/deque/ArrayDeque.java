@@ -1,20 +1,20 @@
 package deque;
 
-public class ArrayDeque<Item> {
-    private Item[] items;
+public class ArrayDeque<T> {
+    private T[] items;
     private int size;
     private int nextFirst;
     private int nextLast;
 
     public ArrayDeque() {
-        items = (Item[]) new Object[8];
+        items = (T[]) new Object[8];
         size = 0;
         nextFirst = 4;
         nextLast = 5;
     }
 
-    public void upSize(int capacity) {
-        Item[] newArr = (Item[]) new Object[capacity];
+    private void upSize(int capacity) {
+        T[] newArr = (T[]) new Object[capacity];
 
         // insert the old array into new Array
         int currIdx = (nextFirst + 1) % items.length;
@@ -28,8 +28,8 @@ public class ArrayDeque<Item> {
         nextLast = size;
     }
 
-    public void downSize(int capacity) {
-        Item[] newArr = (Item[]) new Object[capacity];
+    private void downSize(int capacity) {
+        T[] newArr = (T[]) new Object[capacity];
 
         int currIdx = (nextFirst + 1) % items.length;
         for (int newIdx = 0; newIdx < capacity; newIdx++) {
@@ -43,7 +43,12 @@ public class ArrayDeque<Item> {
 
     }
 
-    public void addFirst(Item item) {
+    private boolean shouldDownSize() {
+        double ratio = ((double) size - 1) / (double) items.length;
+        return ratio < 0.25 && items.length >= 16;
+    }
+
+    public void addFirst(T item) {
         if (size >= items.length) {
             upSize(size * 2);
         }
@@ -52,7 +57,7 @@ public class ArrayDeque<Item> {
         size++;
     }
 
-    public void addLast(Item item) {
+    public void addLast(T item) {
         if (size >= items.length) {
             upSize(size * 2);
         }
@@ -86,7 +91,7 @@ public class ArrayDeque<Item> {
         System.out.printf("\n\nNEXT FIRST: %d \t NEXT LAST: %d\n", nextFirst, nextLast);
     }
 
-    public Item removeFirst() {
+    public T removeFirst() {
         if (size <= 0) {
             return null;
         }
@@ -97,7 +102,7 @@ public class ArrayDeque<Item> {
         // get index before nextFirst
         int currFirstIdx = (nextFirst + 1 + items.length) % items.length;
         // save item at that index
-        Item currFirstItem = items[currFirstIdx];
+        T currFirstItem = items[currFirstIdx];
         // make the item at that index null (prevent loitering)
         items[currFirstIdx] = null;
         // set the nextFirst to the index before it
@@ -107,8 +112,7 @@ public class ArrayDeque<Item> {
         return currFirstItem;
     }
 
-
-    public Item removeLast() {
+    public T removeLast() {
         if (size <= 0) {
             return null;
         }
@@ -117,44 +121,17 @@ public class ArrayDeque<Item> {
         }
 
         int currLastIdx = (nextLast - 1 + items.length) % items.length;
-        Item currLastItem = items[currLastIdx];
+        T currLastItem = items[currLastIdx];
         items[currLastIdx] = null;
         nextLast = currLastIdx;
         size--;
         return currLastItem;
     }
 
-    public Item get(int i) {
+    public T get(int i) {
         int currIdx = (nextFirst + 1 + i) % items.length;
         return items[currIdx];
     }
-
-    private boolean shouldDownSize() {
-        double ratio = ((double) size - 1) / (double) items.length;
-        return ratio < 0.25 && items.length >= 16;
-    }
-
-    public static void main(String[] args) {
-        ArrayDeque<String> ad = new ArrayDeque();
-        ad.addLast("a");
-        ad.addLast("b");
-        ad.addFirst("c");
-        ad.addLast("d");
-        ad.addLast("e");
-        ad.addFirst("f");
-        ad.addLast("g");
-        ad.addLast("h");
-
-        ad.addLast("Z");
-
-        ad.removeLast();
-        ad.removeLast();
-        ad.removeLast();
-        ad.removeLast();
-        ad.removeLast();
-        ad.removeFirst();
-
-
-        ad.printDeque();
-    }
 }
+
+
