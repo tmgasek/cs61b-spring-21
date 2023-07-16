@@ -38,7 +38,7 @@ public class ArrayDeque<Item> {
         }
 
         items = newArr;
-        nextFirst = capacity -1 ;
+        nextFirst = capacity - 1;
         nextLast = items.length - size;
 
     }
@@ -87,10 +87,10 @@ public class ArrayDeque<Item> {
     }
 
     public Item removeFirst() {
-        // Check if removing element will bring the num of els in arr under
-        // 25% the length of the arr
-        double ratio = ((double) size - 1)/ (double) items.length;
-        if (ratio < 0.25 && items.length >= 16) {
+        if (size <= 0) {
+            return null;
+        }
+        if (shouldDownSize()) {
             downSize(items.length / 2);
         }
 
@@ -107,9 +107,12 @@ public class ArrayDeque<Item> {
         return currFirstItem;
     }
 
+
     public Item removeLast() {
-        double ratio = ((double) size - 1)/ (double) items.length;
-        if (ratio < 0.25 && items.length >= 16) {
+        if (size <= 0) {
+            return null;
+        }
+        if (shouldDownSize()) {
             downSize(items.length / 2);
         }
 
@@ -122,9 +125,14 @@ public class ArrayDeque<Item> {
     }
 
     public Item get(int i) {
-        return items[i];
+        int currIdx = (nextFirst + 1 + i) % items.length;
+        return items[currIdx];
     }
 
+    private boolean shouldDownSize() {
+        double ratio = ((double) size - 1) / (double) items.length;
+        return ratio < 0.25 && items.length >= 16;
+    }
 
     public static void main(String[] args) {
         ArrayDeque<String> ad = new ArrayDeque();
