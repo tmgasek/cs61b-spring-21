@@ -2,11 +2,44 @@ package deque;
 
 import afu.org.checkerframework.checker.oigj.qual.O;
 
-public class ArrayDeque<T> implements Deque<T> {
+import java.util.Iterator;
+
+public class ArrayDeque<T> implements Deque<T>, Iterable<T>
+{
     private T[] items;
     private int size;
     private int nextFirst;
     private int nextLast;
+
+    private class ArrayDequeIterator implements Iterator<T> {
+        private int pos;
+
+        public ArrayDequeIterator() {
+            pos = 0;
+        }
+
+        public boolean hasNext() {
+            if (pos < items.length) {
+                if (items[pos] == null) {
+                    pos++;
+                    return hasNext();
+                } else {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public T next() {
+            T returnItem = items[pos];
+            pos++;
+            return returnItem;
+        }
+    }
+
+    public Iterator<T> iterator() {
+        return new ArrayDequeIterator();
+    }
 
     public ArrayDeque(){
         items = (T[]) new Object[8];
@@ -136,6 +169,38 @@ public class ArrayDeque<T> implements Deque<T> {
     public T get(int i) {
         int currIdx = (nextFirst + 1 + i) % items.length;
         return items[currIdx];
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof ArrayDeque)) {
+            return false;
+        }
+        ArrayDeque<T> other = (ArrayDeque<T>) o;
+        if (other.size() != this.size()) {
+            return false;
+        }
+        for (int i = 0; i < size(); i++) {
+            if (!other.get(i).equals(this.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        // test iterator
+        ArrayDeque<Integer> ad1 = new ArrayDeque<>();
+        ad1.addFirst(1);
+        ad1.addFirst(2);
+        ad1.addFirst(3);
+
+        for (int i : ad1) {
+            System.out.println(i);
+        }
     }
 }
 

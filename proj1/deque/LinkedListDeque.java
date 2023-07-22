@@ -1,6 +1,8 @@
 package deque;
 
-public class LinkedListDeque<T> implements Deque<T> {
+import java.util.Iterator;
+
+public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
     private final Node head;
     private final Node tail;
     private int size;
@@ -15,6 +17,28 @@ public class LinkedListDeque<T> implements Deque<T> {
             this.prev = prev;
             this.next = next;
         }
+    }
+
+    private class LinkedListDequeIterator<T> implements Iterator<T> {
+        private Node curr;
+
+        public LinkedListDequeIterator(Node first) {
+            curr = first;
+        }
+
+        public boolean hasNext() {
+            return curr != tail;
+        }
+
+        public T next() {
+            T returnItem = (T) curr.item;
+            curr = curr.next;
+            return returnItem;
+        }
+    }
+
+    public LinkedListDequeIterator<T> iterator() {
+        return new LinkedListDequeIterator<>(head.next);
     }
 
     // Create an empty LLDeque
@@ -117,13 +141,40 @@ public class LinkedListDeque<T> implements Deque<T> {
         return null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof LinkedListDeque)) {
+            return false;
+        }
+        LinkedListDeque<T> other = (LinkedListDeque<T>) o;
+        if (other.size() != this.size()) {
+            return false;
+        }
+        for (int i = 0; i < size(); i++) {
+            if (!other.get(i).equals(this.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
 
-        lld1.addFirst(1);
-        lld1.addLast(2);
 
-        lld1.printDeque();
-        System.out.println("SIZE: " + lld1.size());
+        // test iterator
+        lld1.addFirst(1);
+        lld1.addFirst(2);
+        lld1.addFirst(3);
+
+        for (int i : lld1) {
+            System.out.println(i);
+        }
+
     }
+
+
 }
