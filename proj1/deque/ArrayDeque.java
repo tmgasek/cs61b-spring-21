@@ -1,12 +1,14 @@
 package deque;
 
-public class ArrayDeque<T> {
+import afu.org.checkerframework.checker.oigj.qual.O;
+
+public class ArrayDeque<T> implements Deque<T> {
     private T[] items;
     private int size;
     private int nextFirst;
     private int nextLast;
 
-    public ArrayDeque() {
+    public ArrayDeque(){
         items = (T[]) new Object[8];
         size = 0;
         nextFirst = 4;
@@ -48,6 +50,7 @@ public class ArrayDeque<T> {
         return ratio < 0.25 && items.length >= 16;
     }
 
+    @Override
     public void addFirst(T item) {
         if (size >= items.length) {
             upSize(size * 2);
@@ -57,6 +60,7 @@ public class ArrayDeque<T> {
         size++;
     }
 
+    @Override
     public void addLast(T item) {
         if (size >= items.length) {
             upSize(size * 2);
@@ -66,14 +70,12 @@ public class ArrayDeque<T> {
         size++;
     }
 
-    public boolean isEmpty() {
-        return size <= 0;
-    }
-
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public void printDeque() {
         System.out.print("IDX: \t");
         for (int i = 0; i < items.length; i++) {
@@ -91,6 +93,7 @@ public class ArrayDeque<T> {
         System.out.printf("\n\nNEXT FIRST: %d \t NEXT LAST: %d\n", nextFirst, nextLast);
     }
 
+    @Override
     public T removeFirst() {
         if (size <= 0) {
             return null;
@@ -112,6 +115,7 @@ public class ArrayDeque<T> {
         return currFirstItem;
     }
 
+    @Override
     public T removeLast() {
         if (size <= 0) {
             return null;
@@ -128,6 +132,7 @@ public class ArrayDeque<T> {
         return currLastItem;
     }
 
+    @Override
     public T get(int i) {
         int currIdx = (nextFirst + 1 + i) % items.length;
         return items[currIdx];
