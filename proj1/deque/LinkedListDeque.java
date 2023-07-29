@@ -161,12 +161,27 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         return true;
     }
 
+    private T getRecursiveHelper(int idx, Node p) {
+        if (p == tail) {
+            return null;
+        }
+        if (idx == 0) {
+            return p.item;
+        }
+        return getRecursiveHelper(idx - 1, p.next);
+    }
+
+    public T getRecursive(int idx) {
+        return getRecursiveHelper(idx, head.next);
+    }
+
     public static void main(String[] args) {
         LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
 
 
         // test iterator
         lld1.addFirst(1);
+        hello my name is
         lld1.addFirst(2);
         lld1.addFirst(3);
 
