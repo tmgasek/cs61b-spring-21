@@ -37,26 +37,15 @@ public class Main {
                 if (args.length != 2) {
                     throw new IllegalArgumentException("Incorrect operands.");
                 }
-
                 String message = args[1];
                 System.out.println("Committing with message: " + message);
                 Repository.commit(message);
-
-                // Get the current HEAD - Head file has SHA string
-                String headSHA = Utils.readContentsAsString(Repository.HEAD_FILE);
-                System.out.println("HEAD is now at " + headSHA);
-
-                String stagingContent = Utils.readContentsAsString(Repository.STAGING_FILE);
-                System.out.println("Staging area is now empty: " + stagingContent.equals(""));
-
-                // Get the current commit
-                Commit currentCommit = Commit.fromFile(headSHA);
-                System.out.println("Current commit is " + currentCommit.getSHA1());
-
-                // Get parent of current commit
-                Commit parent = Commit.fromFile(currentCommit.getParent().getSHA1());
-                System.out.println("Parent of current commit is " + parent.getSHA1());
-
+                break;
+            case "log":
+                if (args.length != 1) {
+                    throw new IllegalArgumentException("Incorrect operands.");
+                }
+                Repository.log();
                 break;
         }
     }

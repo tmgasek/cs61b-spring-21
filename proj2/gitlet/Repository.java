@@ -91,21 +91,16 @@ public class Repository {
     public static void commit(String message) {
         // Read in from filesystem the HEAD commit object and staging area file.
         Blob blob = Utils.readObject(STAGING_FILE, Blob.class);
-        System.out.println("STAGING AREA: " + blob.getFilename() + " -> " + blob.getContent());
-
         // Clone the HEAD commit.
         // Get the SHA in the HEAD file.
         String HEAD_SHA = Utils.readContentsAsString(HEAD_FILE);
-        System.out.println("HEAD SHA: " + HEAD_SHA);
 
         Commit HEAD_COMMIT = Commit.fromFile(HEAD_SHA);
-        System.out.println("HEAD COMMIT: " + HEAD_COMMIT);
 
         // Modify its msg and timestamp according to the user's input.
         Commit newCommit = new Commit(message, "Tom", HEAD_SHA);
         newCommit.setTimestamp(new Date());
 
-        System.out.println("NEW COMMIT: " + newCommit);
         String blobSHA = sha1((Object) blob.getContent());
         // Use staging area to modify the files tracked by new commit.
         newCommit.addFile(blob.getFilename(), blobSHA);
@@ -122,6 +117,22 @@ public class Repository {
 
         // Write the SHA of the new commit to the HEAD file.
         Utils.writeContents(HEAD_FILE, newCommit.getSHA1());
+    }
+
+    public static void log() {
+        // Read in SHA from HEAD file.
+        String HEAD_SHA = Utils.readContentsAsString(HEAD_FILE);
+        // Read in commit object from filesystem.
+        Commit curr = Commit.fromFile(HEAD_SHA);
+        // Loop over the commit objects, starting from the current one.
+        System.out.println("--HEAD--");
+        while (curr != null) {
+            // Print out the commit object.
+            System.out.println("--SHA: " + curr.getSHA1());
+            System.out.println(curr);
+            // Read in the parent commit object.
+            curr = curr.getParent();
+        }
     }
 }
 
